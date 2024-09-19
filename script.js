@@ -5,6 +5,7 @@ fetch(apiUrl)
     .then(response => response.json())
     .then(data => {
         const deals = data.data;
+        console.log(deals); // Vérifiez les données récupérées
         processDeals(deals);
     })
     .catch(error => console.error('Erreur:', error));
@@ -27,6 +28,8 @@ function processDeals(deals) {
 
     const labels = Object.keys(salesData).sort();
     const data = labels.map(date => salesData[date]);
+
+    console.log(labels, data); // Vérifiez les données traitées
 
     createChart(labels, data);
 }
