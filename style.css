@@ -29,6 +29,7 @@ table {
     max-width: 800px;
     border-collapse: collapse;
     margin-bottom: 20px;
+    text-align: center;
 }
 
 table, th, td {
@@ -37,7 +38,6 @@ table, th, td {
 
 th, td {
     padding: 10px;
-    text-align: center;
 }
 
 th {
@@ -47,4 +47,5 @@ th {
 #chart-container {
     width: 80%;
     max-width: 800px;
+    text-align: center;
 }

@@ -19,6 +19,8 @@ function processDeals(deals) {
     const salesData = {};
     const now = new Date();
     const startDate = new Date(now.setDate(now.getDate() - 30));
+    let totalSales = 0;
+    let contractsSigned = 0;
 
     deals.forEach(deal => {
         const wonTime = new Date(deal.won_time);
@@ -28,6 +30,8 @@ function processDeals(deals) {
                 salesData[date] = 0;
             }
             salesData[date] += deal.value;
+            totalSales += deal.value;
+            contractsSigned++;
         }
     });
 
@@ -36,6 +40,9 @@ function processDeals(deals) {
 
     console.log('Labels:', labels); // Vérifiez les labels
     console.log('Data:', data); // Vérifiez les données traitées
+
+    document.getElementById('total-sales').textContent = totalSales;
+    document.getElementById('contracts-signed').textContent = contractsSigned;
 
     createChart(labels, data);
 }
