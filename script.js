@@ -72,24 +72,31 @@ function processDeals(deals) {
         previewData.push(sum);
     }
 
-    createChart(previewLabels, previewData, totalSales === 0 && contractsSigned === 0);
+    createChart(labels, cumulativeData, previewLabels, previewData);
     populateContractsTable(deals);
 }
 
-function createChart(labels, data, isPreview) {
+function createChart(labels, data, previewLabels, previewData) {
     const ctx = document.getElementById('line-chart').getContext('2d');
     console.log('Canvas context:', ctx); // Vérifiez le contexte du canvas
     const lineChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: labels,
+            labels: [...labels, ...previewLabels],
             datasets: [
                 {
-                    label: isPreview ? 'Prévisualisation' : 'Montant des ventes',
-                    data: data,
-                    borderColor: isPreview ? 'rgba(192, 192, 192, 1)' : 'rgba(75, 192, 192, 1)',
+                    label: 'Montant des ventes',
+                    data: [...data, ...new Array(previewLabels.length).fill(null)],
+                    borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 2,
-                    borderDash: isPreview ? [5, 5] : [],
+                    fill: false
+                },
+                {
+                    label: 'Prévisualisation',
+                    data: new Array(data.length).fill(null).concat(previewData),
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
                     fill: false
                 }
             ]
@@ -114,6 +121,7 @@ function createChart(labels, data, isPreview) {
 function populateContractsTable(deals) {
     const tableBody = document.getElementById('contracts-table').getElementsByTagName('tbody')[0];
     let cumulativeSales = 0;
+    let totalPrime = 0;
 
     deals.forEach(deal => {
         const wonTime = new Date(deal.won_time);
@@ -123,6 +131,7 @@ function populateContractsTable(deals) {
         cumulativeSales += value;
         const percentage = cumulativeSales < 3000 ? 10 : 20;
         const prime = (value * percentage) / 100;
+        totalPrime += prime;
 
         const row = tableBody.insertRow();
         row.insertCell(0).textContent = date;
@@ -131,4 +140,6 @@ function populateContractsTable(deals) {
         row.insertCell(3).textContent = percentage;
         row.insertCell(4).textContent = prime;
     });
+
+    document.getElementById('total-prime').textContent = totalPrime;
 }
