@@ -44,10 +44,22 @@ function processDeals(deals) {
     document.getElementById('total-sales').textContent = totalSales;
     document.getElementById('contracts-signed').textContent = contractsSigned;
 
-    createChart(labels, data);
+    if (data.length === 0) {
+        // Ajouter une prévisualisation si les données sont vides
+        const previewLabels = Array.from({ length: 30 }, (_, i) => {
+            const date = new Date(startDate);
+            date.setDate(date.getDate() + i);
+            return date.toISOString().split('T')[0];
+        });
+        const previewData = Array(30).fill(0);
+
+        createChart(previewLabels, previewData, true);
+    } else {
+        createChart(labels, data, false);
+    }
 }
 
-function createChart(labels, data) {
+function createChart(labels, data, isPreview) {
     const ctx = document.getElementById('line-chart').getContext('2d');
     console.log('Canvas context:', ctx); // Vérifiez le contexte du canvas
     const lineChart = new Chart(ctx, {
@@ -55,10 +67,11 @@ function createChart(labels, data) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Montant des ventes',
+                label: isPreview ? 'Prévisualisation' : 'Montant des ventes',
                 data: data,
-                borderColor: 'rgba(75, 192, 192, 1)',
+                borderColor: isPreview ? 'rgba(192, 192, 192, 1)' : 'rgba(75, 192, 192, 1)',
                 borderWidth: 2,
+                borderDash: isPreview ? [5, 5] : [],
                 fill: false
             }]
         },
