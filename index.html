@@ -44,6 +44,21 @@
         <h2>Évolution du montant des deals conclus</h2>
         <canvas id="line-chart"></canvas>
     </div>
+    <h2>Liste de mes contrats</h2>
+    <table id="contracts-table">
+        <thead>
+            <tr>
+                <th>Date de signature</th>
+                <th>Nom</th>
+                <th>CA généré</th>
+                <th>%</th>
+                <th>Ma prime</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Les lignes seront ajoutées dynamiquement -->
+        </tbody>
+    </table>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <script src="script.js"></script>

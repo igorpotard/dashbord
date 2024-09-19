@@ -72,30 +72,24 @@ function processDeals(deals) {
         previewData.push(sum);
     }
 
-    createChart(labels, cumulativeData, previewLabels.slice(-10), previewData.slice(-10));
+    createChart(previewLabels, previewData, totalSales === 0 && contractsSigned === 0);
+    populateContractsTable(deals);
 }
 
-function createChart(labels, data, previewLabels, previewData) {
+function createChart(labels, data, isPreview) {
     const ctx = document.getElementById('line-chart').getContext('2d');
     console.log('Canvas context:', ctx); // Vérifiez le contexte du canvas
     const lineChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: [...labels, ...previewLabels],
+            labels: labels,
             datasets: [
                 {
-                    label: 'Montant des ventes',
+                    label: isPreview ? 'Prévisualisation' : 'Montant des ventes',
                     data: data,
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderColor: isPreview ? 'rgba(192, 192, 192, 1)' : 'rgba(75, 192, 192, 1)',
                     borderWidth: 2,
-                    fill: false
-                },
-                {
-                    label: 'Prévisualisation',
-                    data: new Array(data.length).fill(null).concat(previewData),
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 2,
-                    borderDash: [5, 5],
+                    borderDash: isPreview ? [5, 5] : [],
                     fill: false
                 }
             ]
@@ -114,5 +108,27 @@ function createChart(labels, data, previewLabels, previewData) {
                 }
             }
         }
+    });
+}
+
+function populateContractsTable(deals) {
+    const tableBody = document.getElementById('contracts-table').getElementsByTagName('tbody')[0];
+    let cumulativeSales = 0;
+
+    deals.forEach(deal => {
+        const wonTime = new Date(deal.won_time);
+        const date = wonTime.toISOString().split('T')[0];
+        const name = deal.title;
+        const value = deal.value;
+        cumulativeSales += value;
+        const percentage = cumulativeSales < 3000 ? 10 : 20;
+        const prime = (value * percentage) / 100;
+
+        const row = tableBody.insertRow();
+        row.insertCell(0).textContent = date;
+        row.insertCell(1).textContent = name;
+        row.insertCell(2).textContent = value;
+        row.insertCell(3).textContent = percentage;
+        row.insertCell(4).textContent = prime;
     });
 }
