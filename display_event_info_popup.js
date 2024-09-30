@@ -1,9 +1,5 @@
 
-if (!window.location.href.match(/#.*$/)) {
-(function() {
-    'use strict';
-
-    console.log('Tampermonkey script loaded');
+ console.log('Tampermonkey script loaded');
 
     // Charger Stripe.js
     const stripeScript = document.createElement('script');
@@ -217,6 +213,3 @@ if (!window.location.href.match(/#.*$/)) {
             addButton();
         });
     };
-
-
-})()};
