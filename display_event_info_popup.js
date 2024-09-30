@@ -29,13 +29,13 @@ if (!window.location.href.match(/#.*$/)) {
 
             const popup = document.createElement('div');
             popup.style.position = 'fixed';
-            popup.style.top = '10%';
+            popup.style.top = '30%';
             popup.style.left = '50%';
             popup.style.transform = 'translate(-50%, -10%)';
             popup.style.padding = '20px';
             popup.style.backgroundColor = '#F0EBFD'; // Violet pâle
             popup.style.borderRadius = '10px'; // Bords arrondis
-            popup.style.zIndex = '1000';
+            popup.style.zIndex = '100000';
             popup.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
 
             popup.innerHTML = `
