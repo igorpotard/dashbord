@@ -1,5 +1,7 @@
-
- console.log('Tampermonkey script loaded');
+if (!window.location.href.match(/#.*$/)) {
+(function() {
+    'use strict';
+    console.log('Tampermonkey script loaded');
 
     // Charger Stripe.js
     const stripeScript = document.createElement('script');
@@ -213,3 +215,4 @@
             addButton();
         });
     };
+})()};
