@@ -1,7 +1,9 @@
 if (!window.location.href.match(/#.*$/)) {
 (function() {
     'use strict';
-		const stripeScript = document.createElement('script');
+
+    // Inclure le script Stripe
+    const stripeScript = document.createElement('script');
     stripeScript.src = 'https://js.stripe.com/v3/';
     document.head.appendChild(stripeScript);
 
@@ -55,6 +57,8 @@ if (!window.location.href.match(/#.*$/)) {
             payButton.textContent = 'Continuer';
             buttonContainer.appendChild(payButton);
             popup.appendChild(buttonContainer);
+
+            console.log('Pay button created:', payButton);
 
             fetch('https://igorpotard.github.io/popup.html')
                 .then(response => response.text())
