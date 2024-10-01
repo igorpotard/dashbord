@@ -39,9 +39,6 @@ popup.style.width= '550px';
 popup.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
 
 popup.innerHTML = `
-    <head>
-          <link rel="stylesheet" href="https://igorpotard.github.io/style.css">
-    </head>
     <h2 class="popup-header">
         <span>
             <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" focusable="false" class="svg-inline--fa fa-shield-check fa-fw" viewBox="0 0 512 512">
@@ -104,6 +101,49 @@ popup.innerHTML = `
             <a href="https://igorpotard.github.io/document-informations.pdf" style="color: blue; text-decoration: underline;" target="_blank">document d'information</a>.
         </p>
     </div>
+<style>
+.june-care-input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.june-care-input-container strong {
+    flex: 0 0 150px;
+}
+
+.june-care-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.june-care-readonly {
+    background-color: #f0f0f0;
+    color: #888;
+}
+
+.june-care-benefits {
+    list-style-type: none;
+    padding-inline-start: 0px;
+}
+
+.june-care-benefits > li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 4px;
+}
+
+.june-care-benefits > li > span {
+    margin-left: 8px;
+}
+
+.june-care-benefits > li > svg {
+    flex-shrink: 0;
+}
+</style>
 `;
 
 
