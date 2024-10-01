@@ -173,7 +173,6 @@ if (!window.location.href.match(/#.*$/)) {
             console.log('Page loaded');
             addButton();
         });
-    };
 
 
-})()};
+});()};
