@@ -39,7 +39,9 @@ popup.style.width= '550px';
 popup.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
 
 popup.innerHTML = `
-    <link rel="stylesheet" href="https://igorpotard.github.io/style.css">
+    <head>
+          <link rel="stylesheet" href="https://igorpotard.github.io/style.css">
+    </head>
     <h2 class="popup-header">
         <span>
             <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" focusable="false" class="svg-inline--fa fa-shield-check fa-fw" viewBox="0 0 512 512">
