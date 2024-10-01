@@ -27,12 +27,22 @@ def create_files(site, bg_color, element_color, url):
     js_content = js_content.replace("button.style.backgroundColor = 'color';", 
                                     f"button.style.backgroundColor = '{element_color if element_color.startswith('#') else '#' + element_color}';")
     
+    # Vérifier et remplacer les lignes existantes
+    js_content = js_content.replace("popup.style.backgroundColor = '#F0EBFD';", 
+                                    f"popup.style.backgroundColor = '{bg_color if bg_color.startswith('#') else '#' + bg_color}';")
+    js_content = js_content.replace("payButton.style.backgroundColor = '#0079CA';", 
+                                    f"payButton.style.backgroundColor = '{element_color if element_color.startswith('#') else '#' + element_color}';")
+    js_content = js_content.replace("button.style.backgroundColor = '#0079CA';", 
+                                    f"button.style.backgroundColor = '{element_color if element_color.startswith('#') else '#' + element_color}';")
+    
     # Modifier le contenu du fichier HTML
     html_content = html_content.replace("color:color;", 
                                         f"color:{element_color if element_color.startswith('#') else '#' + element_color};")
+    html_content = html_content.replace("color:#0079CA;", 
+                                        f"color:{element_color if element_color.startswith('#') else '#' + element_color};")
     
     # Modifier le contenu du fichier Tampermonkey
-    base_url = url.split('/')[0] + '//' + url.split('/')[2] + '/' + url.split('/')[3]
+    base_url = '/'.join(url.split('/')[:4])
     tampermonkey_content = tampermonkey_content.replace("// @match        https://feverup.com/purchase/*", 
                                                         f"// @match        {base_url}/*")
     tampermonkey_content = tampermonkey_content.replace("script.src = 'https://igorpotard.github.io/display_event_info_popup.js?v=' + new Date().getTime();", 

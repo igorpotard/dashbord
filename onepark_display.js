@@ -30,7 +30,7 @@ if (!window.location.href.match(/#.*$/)) {
             popup.style.left = '50%';
             popup.style.transform = 'translate(-50%, -10%)';
             popup.style.padding = '20px';
-            popup.style.backgroundColor = '#F0EBFD';
+            popup.style.backgroundColor = '#FFFFFF';
             popup.style.borderRadius = '15px';
             popup.style.zIndex = '10000';
             popup.style.width = '550px';
@@ -65,7 +65,7 @@ if (!window.location.href.match(/#.*$/)) {
                     const payButton = document.createElement('button');
                     payButton.id = 'payNow';
                     payButton.style.padding = '15px 30px';
-                    payButton.style.backgroundColor = '#0079CA';
+                    payButton.style.backgroundColor = '#0CB3E4';
                     payButton.style.color = 'white';
                     payButton.style.border = 'none';
                     payButton.style.borderRadius = '25px';
