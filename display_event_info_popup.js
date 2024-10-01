@@ -24,12 +24,6 @@ overlay.style.height = '100%';
 overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)'; // Augmenter l'opacité ici
 overlay.style.zIndex = '999';
 
-
-var link = document.createElement('link');
-link.rel = 'stylesheet';
-link.href = 'https://igorpotard.github.io/style.css';
-document.head.appendChild(link);
-
 document.body.appendChild(overlay);
 
 const popup = document.createElement('div');
@@ -107,6 +101,7 @@ popup.innerHTML = `
             <a href="https://igorpotard.github.io/document-informations.pdf" style="color: blue; text-decoration: underline;" target="_blank">document d'information</a>.
         </p>
     </div>
+<style src="https://igorpotard.github.io/style.css"></style>
 `;
 
 
