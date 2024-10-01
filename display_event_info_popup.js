@@ -61,7 +61,6 @@ if (!window.location.href.match(/#.*$/)) {
 						payButton.textContent = 'Continuer';
 						buttonContainer.appendChild(payButton);
 
-						popup.appendChild(buttonContainer);
 						document.body.appendChild(popup);
 						fetch('https://igorpotard.github.io/popup.html')
 								.then(response => response.text())
@@ -70,9 +69,11 @@ if (!window.location.href.match(/#.*$/)) {
 										popup.innerHTML = data;
 								})
 								.catch(error => console.error('Erreur lors de la récupération du fichier:', error));
+						popup.appendChild(buttonContainer);
 
 						document.getElementById('closePopup').addEventListener('click', () => {
 								document.body.removeChild(popup);
+								document.body.removeChild(overlay);
 						});
 
 						document.getElementById('payNow').addEventListener('click', (event) => {
