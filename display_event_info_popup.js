@@ -61,11 +61,14 @@ if (!window.location.href.match(/#.*$/)) {
                     payButton.style.cursor = 'pointer';
                     payButton.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
                     payButton.style.transition = 'background-color 0.3s, transform 0.3s';
-                    payButton.textContent = 'Continuer';
+                    payButton.textContent = 'M\'assurer pour ' + (eventInfo.finalPrice * 8 / 100 || 'Non trouvé') + '€';
                     buttonContainer.appendChild(payButton);
                     popup.appendChild(buttonContainer);
 
                     console.log('Pay button created:', payButton);
+
+                    // Variable d'état pour suivre le nombre de clics
+                    let isFirstClick = true;
 
                     // Attacher les événements après avoir inséré le contenu et créé le bouton
                     const closePopupButton = document.getElementById('closePopup');
@@ -81,10 +84,11 @@ if (!window.location.href.match(/#.*$/)) {
                     payButton.addEventListener('click', (event) => {
                         const coverageDetails = document.getElementById('coverageDetails');
                         const eventDetails = document.getElementById('eventDetails');
-                        if (payButton.textContent.includes('M\'assurer')) {
+                        if (isFirstClick) {
                             coverageDetails.style.display = 'none';
                             eventDetails.style.display = 'block';
                             payButton.textContent = 'Continuer';
+                            isFirstClick = false;
                         } else {
                             if (!validateForm()) {
                                 alert('Veuillez remplir tous les champs et accepter les conditions générales et le document d\'information.');
