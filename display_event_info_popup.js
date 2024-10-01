@@ -118,130 +118,112 @@ popup.innerHTML = `
     .june-care-benefits > li > svg {
         flex-shrink: 0;
     }
-
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 24px;
-    }
-
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        -webkit-transition: .4s;
-        transition: .4s;
-    }
-
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 16px;
-        width: 16px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
-    }
-
-    input:checked + .slider {
-        background-color: #2196F3;
-    }
-
-    input:focus + .slider {
-        box-shadow: 0 0 1px #2196F3;
-    }
-
-    input:checked + .slider:before {
-        -webkit-transform: translateX(26px);
-        -ms-transform: translateX(26px);
-        transform: translateX(26px);
-    }
-
-    .slider.round {
-        border-radius: 34px;
-    }
-
-    .slider.round:before {
-        border-radius: 50%;
-    }
 </style>
 `;
 
-const buttonContainer = document.createElement('div');
-buttonContainer.style.display = 'none';
-buttonContainer.style.justifyContent = 'space-between';
-buttonContainer.style.alignItems = 'center';
-buttonContainer.style.marginTop = '20px';
+						const buttonContainer = document.createElement('div');
+						buttonContainer.style.display = 'none';
+						buttonContainer.style.justifyContent = 'space-between';
+						buttonContainer.style.alignItems = 'center';
+						buttonContainer.style.marginTop = '20px';
+
+						const payButton = document.createElement('button');
+						payButton.id = 'payNow';
+						payButton.style.display = 'block';
+						payButton.style.padding = '15px 30px';
+						payButton.style.backgroundColor = '#0079CA';
+						payButton.style.color = 'white';
+						payButton.style.border = 'none';
+						payButton.style.borderRadius = '25px';
+						payButton.style.fontSize = '18px';
+						payButton.style.fontWeight = 'bold';
+						payButton.style.margin = 'auto';
+						payButton.style.cursor = 'pointer';
+						payButton.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+						payButton.style.transition = 'background-color 0.3s, transform 0.3s';
+						payButton.textContent = 'Continuer';
+						buttonContainer.appendChild(payButton);
+
+						popup.appendChild(buttonContainer);
+						document.body.appendChild(popup);
+
+						document.getElementById('closePopup').addEventListener('click', () => {
+								document.body.removeChild(popup);
+						});
+
+						document.getElementById('payNow').addEventListener('click', (event) => {
+								const coverageDetails = document.getElementById('coverageDetails');
+								const eventDetails = document.getElementById('eventDetails');
+								if (payButton.textContent.includes('M\'assurer')) {
+										coverageDetails.style.display = 'none';
+										eventDetails.style.display = 'block';
+										buttonContainer.style.display = 'flex';
+										payButton.textContent = 'Continuer';
+								} else {
+										if (!validateForm()) {
+												alert('Veuillez remplir tous les champs et accepter les conditions générales et le document d\'information.');
+												return;
+										}
+
+										const updatedEmail = document.getElementById('emailInput').value;
+										const updatedFirstName = document.getElementById('firstNameInput').value;
+										const updatedLastName = document.getElementById('lastNameInput').value;
+										eventInfo.email = updatedEmail;
+										eventInfo.firstName = updatedFirstName;
+										eventInfo.lastName = updatedLastName;
+										localStorage.setItem('eventInfo', JSON.stringify(eventInfo));
+										fetch('https://pg-ai.bubbleapps.io/version-test/api/1.1/wf/checkout', {
+												method: 'POST',
+												headers: {
+														'Content-Type': 'application/json'
+												},
+												body: JSON.stringify({
+														prix: eventInfo.finalPrice,
+														name: eventInfo.name,
+														email: eventInfo.email,
+														date: eventInfo.date,
+														lieu: eventInfo.place,
+														nbrplace: eventInfo.numberOfTickets,
+														firstname: eventInfo.firstName,
+														lastname: eventInfo.lastName,
+														link: window.location.href
+												})
+										})
+												.then(response => response.json())
+												.then(data => {
+														console.log(data);
+														window.location.href = data.response.link + "test/" + data.response.id;
+												});
+								}
+						});
+
+						payButton.addEventListener('mouseover', () => {
+								payButton.style.backgroundColor = '#0079CA';
+								payButton.style.transform = 'scale(1.05)';
+						});
+
+						payButton.addEventListener('mouseout', () => {
+								payButton.style.backgroundColor = '#0079CA';
+								payButton.style.transform = 'scale(1)';
+						});
+
+						function validateForm() {
+								const checkbox = document.getElementById('assurance').checked;
+								const email = document.getElementById('emailInput').value.trim();
+								const firstName = document.getElementById('firstNameInput').value.trim();
+								const lastName = document.getElementById('lastNameInput').value.trim();
+
+								return checkbox && email && firstName && lastName;
+						}
+
+						// Initial setup for the button text
+						payButton.textContent = 'M\'assurer pour ' + (eventInfo.finalPrice * 8 / 100 || 'Non trouvé') + '€';
+						buttonContainer.style.display = 'block';
 
 
-
-            const payButton = document.createElement('button');
-            payButton.id = 'payNow';
-            payButton.style.display = 'block';
-            payButton.style.padding = '15px 30px';
-            payButton.style.backgroundColor = '#0079CA';
-            payButton.style.color = 'white';
-            payButton.style.border = 'none';
-            payButton.style.borderRadius = '25px';
-            payButton.style.fontSize = '18px';
-            payButton.style.fontWeight = 'bold';
-            payButton.style.margin = 'auto';
-            payButton.style.cursor = 'pointer';
-            payButton.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-            payButton.style.transition = 'background-color 0.3s, transform 0.3s';
-            payButton.textContent = 'Continuer';
-            buttonContainer.appendChild(payButton);
-
-popup.appendChild(buttonContainer);
-
-
-
-
-const buttonContainer2 = document.createElement('div');
-buttonContainer2.style.display = 'block';
-buttonContainer2.style.justifyContent = 'space-between';
-buttonContainer2.style.alignItems = 'center';
-buttonContainer2.style.marginTop = '20px';
-
-
-
-const payButton2 = document.createElement('button');
-payButton2.id = 'payNow2';
-payButton2.style.display = 'block';
-payButton2.style.padding = '15px 30px';
-payButton2.style.backgroundColor = '#0079CA';
-payButton2.style.color = 'white';
-payButton2.style.border = 'none';
-payButton2.style.borderRadius = '25px';
-payButton2.style.fontSize = '18px';
-payButton2.style.fontWeight = 'bold';
-payButton2.style.margin = 'auto';
-payButton2.style.cursor = 'pointer';
-payButton2.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-payButton2.style.transition = 'background-color 0.3s, transform 0.3s';
-payButton2.textContent = 'M\'assurer pour ' + (eventInfo.finalPrice * 8 / 100 || 'Non trouvé') + '€';
-buttonContainer2.appendChild(payButton2);
-
-popup.appendChild(buttonContainer2);
-
-document.body.appendChild(popup);
-
-document.getElementById('closePopup').addEventListener('click', () => {
-    document.body.removeChild(popup);
-});
+						document.getElementById('closePopup').addEventListener('click', () => {
+								document.body.removeChild(popup);
+						});
 
 
             document.getElementById('payNow2').addEventListener('click', (event) => {
@@ -257,63 +239,7 @@ document.getElementById('closePopup').addEventListener('click', () => {
                 popup.remove();
                 overlay.remove();
             });
-
-            function validateForm() {
-                const checkbox = document.getElementById('assurance').checked;
-                const email = document.getElementById('emailInput').value.trim();
-                const firstName = document.getElementById('firstNameInput').value.trim();
-                const lastName = document.getElementById('lastNameInput').value.trim();
-
-                return checkbox && email && firstName && lastName;
-            }
-
-            payButton.addEventListener('click', async (event) => {
-                if (!validateForm()) {
-                    alert('Veuillez remplir tous les champs et accepter les conditions générales et le document d\'information.');
-                    return;
-                }
-
-                const updatedEmail = document.getElementById('emailInput').value;
-                const updatedFirstName = document.getElementById('firstNameInput').value;
-                const updatedLastName = document.getElementById('lastNameInput').value;
-                eventInfo.email = updatedEmail;
-                eventInfo.firstName = updatedFirstName;
-                eventInfo.lastName = updatedLastName;
-                localStorage.setItem('eventInfo', JSON.stringify(eventInfo));
-                const response = await fetch('https://pg-ai.bubbleapps.io/version-test/api/1.1/wf/checkout', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        prix: eventInfo.finalPrice,
-                        name: eventInfo.name,
-                        email: eventInfo.email,
-                        date: eventInfo.date,
-                        lieu: eventInfo.place,
-                        nbrplace: eventInfo.numberOfTickets,
-                        firstname: eventInfo.firstName,
-                        lastname: eventInfo.lastName,
-                        link: window.location.href
-                    })
-                });
-
-                const data = await response.json();
-                console.log(data);
-                console.log(data.response.link + "test/" + data.response.id);
-                window.location.href = data.response.link + "test/" + data.response.id;
-            });
-
-            document.getElementById('payNow').addEventListener('mouseover', () => {
-                document.getElementById('payNow').style.backgroundColor = '#0079CA';
-                document.getElementById('payNow').style.transform = 'scale(1.05)';
-            });
-
-            document.getElementById('payNow').addEventListener('mouseout', () => {
-                document.getElementById('payNow').style.backgroundColor = '#0079CA';
-                document.getElementById('payNow').style.transform = 'scale(1)';
-            });
-        }
+				}
 
 
 
