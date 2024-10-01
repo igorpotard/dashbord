@@ -41,6 +41,15 @@ if (!window.location.href.match(/#.*$/)) {
                     popup.innerHTML = data;
                     console.log('Popup content loaded');
 
+										document.getElementById('nameInput').value = eventInfo.name || 'Non trouvé';
+                    document.getElementById('dateInput').value = eventInfo.date || 'Non trouvé';
+                    document.getElementById('placeInput').value = eventInfo.place || 'Non trouvé';
+                    document.getElementById('ticketsInput').value = eventInfo.numberOfTickets || 'Non trouvé';
+                    document.getElementById('priceInput').value = (eventInfo.finalPrice * 8 / 100 || 'Non trouvé') + ' €';
+                    document.getElementById('emailInput').value = eventInfo.email || '';
+                    document.getElementById('firstNameInput').value = eventInfo.firstName || '';
+                    document.getElementById('lastNameInput').value = eventInfo.lastName || '';
+
                     // Créer et ajouter le bouton payNow après le chargement du contenu
                     const buttonContainer = document.createElement('div');
                     buttonContainer.style.display = 'flex';
