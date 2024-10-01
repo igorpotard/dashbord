@@ -1,7 +1,7 @@
 if (!window.location.href.match(/#.*$/)) {
 (function() {
     'use strict';
-
+	console.log("test");
     // Inclure le script Stripe
     const stripeScript = document.createElement('script');
     stripeScript.src = 'https://js.stripe.com/v3/';
