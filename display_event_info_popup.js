@@ -40,7 +40,7 @@ if (!window.location.href.match(/#.*$/)) {
             document.body.appendChild(popup);
 
 						//Recuperation du fichier html
-            fetch('https://igorpotard.github.io/popup.html')
+            fetch('https://igorpotard.github.io/popup.html?v='+ new Date().getTime())
                 .then(response => response.text())
                 .then(data => {
                     popup.innerHTML = data;
