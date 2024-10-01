@@ -10,8 +10,9 @@ if (!window.location.href.match(/#.*$/)) {
     stripeScript.onload = function() {
 
         function showPopup(eventInfo) {
-            console.log('Creating popup with event info:', eventInfo);
 
+
+						//Overlay qui noircit le fond
             const overlay = document.createElement('div');
             overlay.style.position = 'fixed';
             overlay.style.top = '0';
@@ -22,6 +23,7 @@ if (!window.location.href.match(/#.*$/)) {
             overlay.style.zIndex = '999';
             document.body.appendChild(overlay);
 
+						//POPUP
             const popup = document.createElement('div');
             popup.style.position = 'fixed';
             popup.style.top = '15%';
@@ -37,12 +39,13 @@ if (!window.location.href.match(/#.*$/)) {
             popup.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
             document.body.appendChild(popup);
 
+						//Recuperation du fichier html
             fetch('https://igorpotard.github.io/popup.html')
                 .then(response => response.text())
                 .then(data => {
                     popup.innerHTML = data;
-                    console.log('Popup content loaded');
 
+										//mise a jour des valeurs des input avec les eventInfo
 										document.getElementById('nameInput').value = eventInfo.name || 'Non trouvé';
                     document.getElementById('dateInput').value = eventInfo.date || 'Non trouvé';
                     document.getElementById('placeInput').value = eventInfo.place || 'Non trouvé';
@@ -76,8 +79,6 @@ if (!window.location.href.match(/#.*$/)) {
                     buttonContainer.appendChild(payButton);
                     popup.appendChild(buttonContainer);
 
-                    console.log('Pay button created:', payButton);
-
                     // Variable d'état pour suivre le nombre de clics
                     let isFirstClick = true;
 
@@ -92,20 +93,24 @@ if (!window.location.href.match(/#.*$/)) {
                         console.error('closePopup button not found');
                     }
 
+										//Quand le bouton est presse
                     payButton.addEventListener('click', (event) => {
                         const coverageDetails = document.getElementById('coverageDetails');
                         const eventDetails = document.getElementById('eventDetails');
+												//Si premier click masque les avantages et montre les input
                         if (isFirstClick) {
                             coverageDetails.style.display = 'none';
                             eventDetails.style.display = 'block';
                             payButton.textContent = 'Continuer';
                             isFirstClick = false;
-                        } else {
+                        }
+												//Si 2eme click fait la verif des champs et passe et payement
+												else {
                             if (!validateForm()) {
                                 alert('Veuillez remplir tous les champs et accepter les conditions générales et le document d\'information.');
                                 return;
                             }
-
+														//Save les nouvelles infos
                             const updatedEmail = document.getElementById('emailInput').value;
                             const updatedFirstName = document.getElementById('firstNameInput').value;
                             const updatedLastName = document.getElementById('lastNameInput').value;
@@ -113,6 +118,7 @@ if (!window.location.href.match(/#.*$/)) {
                             eventInfo.firstName = updatedFirstName;
                             eventInfo.lastName = updatedLastName;
                             localStorage.setItem('eventInfo', JSON.stringify(eventInfo));
+														//envoie des infos au bubbleapps
                             fetch('https://pg-ai.bubbleapps.io/version-test/api/1.1/wf/checkout', {
                                 method: 'POST',
                                 headers: {
@@ -132,7 +138,7 @@ if (!window.location.href.match(/#.*$/)) {
                             })
                                 .then(response => response.json())
                                 .then(data => {
-                                    console.log(data);
+																		//vas au bubbleapps
                                     window.location.href = data.response.link + "test/" + data.response.id;
                                 });
                         }
@@ -159,7 +165,7 @@ if (!window.location.href.match(/#.*$/)) {
                 return checkbox && email && firstName && lastName;
             }
         }
-
+				//recup eventInfo = info du user + billet
         function loadEventInfo() {
             const eventInfo = JSON.parse(localStorage.getItem('eventInfo'));
             if (eventInfo) {
@@ -169,6 +175,7 @@ if (!window.location.href.match(/#.*$/)) {
             }
         }
 
+				//button pour show popup
         function addButton() {
             const button = document.createElement('button');
             button.innerText = 'Afficher les informations de l\'événement';
@@ -186,7 +193,7 @@ if (!window.location.href.match(/#.*$/)) {
 
             document.body.appendChild(button);
         }
-
+				//ajoute button on load
         window.addEventListener('load', () => {
             console.log('Page loaded');
             addButton();
