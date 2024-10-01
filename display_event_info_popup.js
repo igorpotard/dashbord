@@ -37,14 +37,6 @@ if (!window.location.href.match(/#.*$/)) {
 						popup.style.zIndex = '10000';
 						popup.style.width= '550px';
 						popup.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
-						document.body.appendChild(popup);
-						fetch('https://igorpotard.github.io/popup.html')
-								.then(response => response.text())
-								.then(data => {
-										// Insérez le contenu récupéré dans la popup
-										popup.innerHTML = data;
-								})
-								.catch(error => console.error('Erreur lors de la récupération du fichier:', error));
 
 						const buttonContainer = document.createElement('div');
 						buttonContainer.style.display = 'none';
@@ -70,6 +62,14 @@ if (!window.location.href.match(/#.*$/)) {
 						buttonContainer.appendChild(payButton);
 
 						popup.appendChild(buttonContainer);
+						document.body.appendChild(popup);
+						fetch('https://igorpotard.github.io/popup.html')
+								.then(response => response.text())
+								.then(data => {
+										// Insérez le contenu récupéré dans la popup
+										popup.innerHTML = data;
+								})
+								.catch(error => console.error('Erreur lors de la récupération du fichier:', error));
 
 						document.getElementById('closePopup').addEventListener('click', () => {
 								document.body.removeChild(popup);
