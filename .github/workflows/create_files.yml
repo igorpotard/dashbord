@@ -1,6 +1,7 @@
 name: Create Files
 
 on:
+  workflow_dispatch:
   repository_dispatch:
     types: [create_files]
 
