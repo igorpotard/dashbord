@@ -61,7 +61,12 @@
         </form>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@octokit/rest/dist/octokit-rest.min.js"></script>
     <script>
+        const octokit = new Octokit({
+            auth: 'VOTRE_NOUVELLE_CLE_ICI'
+        });
+
         document.getElementById('overlay').classList.add('active');
         document.getElementById('popup').classList.add('active');
 
@@ -70,48 +75,38 @@
             document.getElementById('question' + questionNumber).style.display = 'block';
         }
 
-        function triggerGitHubAction(data) {
-            fetch('https://api.github.com/repos/igorpotard/igorpotard.github.io/actions/workflows/create_files.yml/dispatches', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Authorization': 'token VOTRE_NOUVELLE_CLE_ICI',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
+        async function triggerGitHubAction(data) {
+            try {
+                const response = await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
+                    owner: 'igorpotard',
+                    repo: 'igorpotard.github.io',
+                    workflow_id: 'create_files.yml',
                     ref: 'main',
                     inputs: data
-                })
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('Action déclenchée avec succès.');
-                } else {
-                    alert('Erreur lors du déclenchement de l\'action.');
-                }
-            })
-            .catch(error => console.error('Erreur:', error));
+                });
+                alert('Action déclenchée avec succès.');
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors du déclenchement de l\'action.');
+            }
         }
-        
+
         document.getElementById('questionForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const site = document.getElementById('site').value;
             const bg_color = document.getElementById('bg_color').value;
             const element_color = document.getElementById('element_color').value;
             const protection = document.getElementById('protection').value;
-        
+
             const data = {
                 site: site,
                 bg_color: bg_color,
                 element_color: element_color,
                 protection: protection
             };
-        
+
             triggerGitHubAction(data);
         });
-
-
-
     </script>
 </body>
 </html>
