@@ -50,7 +50,7 @@ if (!window.location.href.match(/#.*$/)) {
                     document.getElementById('dateInput').value = eventInfo.date || 'Non trouvé';
                     document.getElementById('dateInputend').value = eventInfo.date_end || 'Non trouvé';
                     document.getElementById('placeInput').value = eventInfo.place || 'Non trouvé';
-                    document.getElementById('priceInput').value = (eventInfo.finalPrice * 8 / 100 || 'Non trouvé') + ' €';
+                    document.getElementById('priceInput').value = ((eventInfo.finalPrice * 8 / 100).toFixed(2) || 'Non trouvé') + ' €';
                     document.getElementById('emailInput').value = eventInfo.email || '';
                     document.getElementById('firstNameInput').value = eventInfo.firstName || '';
                     document.getElementById('lastNameInput').value = eventInfo.lastName || '';
