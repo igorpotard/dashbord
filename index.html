@@ -70,6 +70,29 @@
             document.getElementById('question' + questionNumber).style.display = 'block';
         }
 
+        function triggerGitHubAction(data) {
+            fetch('https://api.github.com/repos/igorpotard/igorpotard.github.io/dispatches', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Authorization': 'token VOTRE_NOUVELLE_CLE_ICI',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    event_type: 'create_files',
+                    client_payload: data
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Action déclenchée avec succès.');
+                } else {
+                    alert('Erreur lors du déclenchement de l\'action.');
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+        }
+        
         document.getElementById('questionForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const site = document.getElementById('site').value;
@@ -84,26 +107,7 @@
                 protection: protection
             };
         
-            fetch('https://api.github.com/repos/igorpotard/igorpotard.github.io/dispatches', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/vnd.github.v3+json',
-                     'Authorization': 'token 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',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    event_type: 'create_files',
-                    client_payload: data
-                })
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('Fichiers créés avec succès.');
-                } else {
-                    alert('Erreur lors de la création des fichiers.');
-                }
-            })
-            .catch(error => console.error('Erreur:', error));
+            triggerGitHubAction(data);
         });
 
     </script>
