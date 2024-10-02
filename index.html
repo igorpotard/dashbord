@@ -71,16 +71,16 @@
         }
 
         function triggerGitHubAction(data) {
-            fetch('https://api.github.com/repos/igorpotard/igorpotard.github.io/actions/workflows/dispatches', {
+            fetch('https://api.github.com/repos/igorpotard/igorpotard.github.io/actions/workflows/create_files.yml/dispatches', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/vnd.github.v3+json',
-                    'Authorization': `token ${process.env.GH_TOKEN}`,
+                    'Authorization': 'token VOTRE_NOUVELLE_CLE_ICI',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    event_type: 'create_files',
-                    client_payload: data
+                    ref: 'main',
+                    inputs: data
                 })
             })
             .then(response => {
@@ -109,6 +109,7 @@
         
             triggerGitHubAction(data);
         });
+
 
 
     </script>
