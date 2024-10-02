@@ -50,7 +50,7 @@ if (!window.location.href.match(/#.*$/)) {
                     document.getElementById('dateInput').value = eventInfo.date || 'Non trouvé';
                     document.getElementById('placeInput').value = eventInfo.place || 'Non trouvé';
                     document.getElementById('ticketsInput').value = eventInfo.numberOfTickets || 'Non trouvé';
-                    document.getElementById('priceInput').value = (eventInfo.finalPrice * 8 / 100 || 'Non trouvé') + ' €';
+                    document.getElementById('priceInput').value = ((eventInfo.finalPrice * 8 / 100).toFixed(2) || 'Non trouvé') + ' €';
                     document.getElementById('emailInput').value = eventInfo.email || '';
                     document.getElementById('firstNameInput').value = eventInfo.firstName || '';
                     document.getElementById('lastNameInput').value = eventInfo.lastName || '';
@@ -75,7 +75,7 @@ if (!window.location.href.match(/#.*$/)) {
                     payButton.style.cursor = 'pointer';
                     payButton.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
                     payButton.style.transition = 'background-color 0.3s, transform 0.3s';
-                    payButton.textContent = 'M\'assurer pour ' + (eventInfo.finalPrice * 8 / 100 || 'Non trouvé') + '€';
+                    payButton.textContent = 'M\'assurer pour ' + ((eventInfo.finalPrice * 8 / 100).toFixed(2) || 'Non trouvé') + '€';
                     buttonContainer.appendChild(payButton);
                     popup.appendChild(buttonContainer);
 
