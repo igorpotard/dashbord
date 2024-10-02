@@ -39,6 +39,9 @@ def create_files(site, bg_color, element_color, url):
                                     f"button.style.backgroundColor = '{element_color if element_color.startswith('#') else '#' + element_color}';")
     
     # Vérifier et remplacer les lignes existantes
+    js_content = js_content.replace("fetch('https://igorpotard.github.io/popup_protection.html?v='+ new Date().getTime())", 
+                                    f"fetch('https://igorpotard.github.io/{html_filename}?v='+ new Date().getTime())"
+    
     js_content = js_content.replace("popup.style.backgroundColor = '#F0EBFD';", 
                                     f"popup.style.backgroundColor = '{bg_color if bg_color.startswith('#') else '#' + bg_color}';")
     js_content = js_content.replace("payButton.style.backgroundColor = '#0079CA';", 
