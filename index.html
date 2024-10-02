@@ -71,7 +71,7 @@
         }
 
         function triggerGitHubAction(data) {
-            fetch('https://api.github.com/repos/igorpotard/igorpotard.github.io/dispatches', {
+            fetch('https://api.github.com/repos/igorpotard/igorpotard.github.io/actions/workflows/dispatches', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/vnd.github.v3+json',
