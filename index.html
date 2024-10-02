@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Popup Questions</title>
-    <style>
+        <style>
         .popup {
             display: none;
             position: fixed;
@@ -33,35 +33,10 @@
             display: block;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@octokit/rest/dist/octokit-rest.min.js"></script>
 </head>
 <body>
-    <div class="overlay" id="overlay"></div>
-    <div class="popup" id="popup">
-        <form id="questionForm">
-            <div class="question" id="question1">
-                <label for="site">Site cible:</label>
-                <input type="text" id="site" name="site" required>
-                <button type="button" onclick="nextQuestion(2)">Suivant</button>
-            </div>
-            <div class="question" id="question2" style="display:none;">
-                <label for="bg_color">Couleur de fond:</label>
-                <input type="text" id="bg_color" name="bg_color" required>
-                <button type="button" onclick="nextQuestion(3)">Suivant</button>
-            </div>
-            <div class="question" id="question3" style="display:none;">
-                <label for="element_color">Couleur des éléments:</label>
-                <input type="text" id="element_color" name="element_color" required>
-                <button type="button" onclick="nextQuestion(4)">Suivant</button>
-            </div>
-            <div class="question" id="question4" style="display:none;">
-                <label for="protection">Si annulation mettre 1 si protection mettre 2:</label>
-                <input type="text" id="protection" name="protection" required>
-                <button type="submit">Terminer</button>
-            </div>
-        </form>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@octokit/rest/dist/octokit-rest.min.js"></script>
+    <!-- Votre HTML ici -->
     <script>
         const octokit = new Octokit({
             auth: 'VOTRE_NOUVELLE_CLE_ICI'
