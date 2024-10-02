@@ -24,4 +24,4 @@ jobs:
 
     - name: Run create_files script
       run: |
-        python create_files.py
+        python create_files.py '${{ github.event.client_payload | tojson }}'
