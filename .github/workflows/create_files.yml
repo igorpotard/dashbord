@@ -23,6 +23,8 @@ jobs:
         pip install flask
 
     - name: Run create_files script
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
         echo '${{ toJson(github.event.client_payload) }}' > payload.json
         python create_files.py 'payload.json'
