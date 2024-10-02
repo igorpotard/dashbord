@@ -75,7 +75,7 @@
                 method: 'POST',
                 headers: {
                     'Accept': 'application/vnd.github.v3+json',
-                    'Authorization': 'token VOTRE_NOUVELLE_CLE_ICI',
+                    'Authorization': `token ${process.env.GH_TOKEN}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
@@ -109,6 +109,7 @@
         
             triggerGitHubAction(data);
         });
+
 
     </script>
 </body>
