@@ -54,7 +54,7 @@ if (!window.location.href.match(/#.*$/)) {
                     document.getElementById('emailInput').value = eventInfo.email || '';
                     document.getElementById('firstNameInput').value = eventInfo.firstName || '';
                     document.getElementById('lastNameInput').value = eventInfo.lastName || '';
-                    document.getElementById('imatriculation').value = eventInfo.imat || 'Non trouvé';
+                    document.getElementById('imatriculation').value = eventInfo.imat || '';
 
                     // Créer et ajouter le bouton payNow après le chargement du contenu
                     const buttonContainer = document.createElement('div');

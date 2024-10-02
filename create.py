@@ -10,14 +10,25 @@ def create_files(site, bg_color, element_color, url):
     tampermonkey_filename = f"{site_name}_display_tampermonkey.js"
     
     # Lire les fichiers originaux
-    with open('display_event_info_popup.js', 'r') as js_file:
-        js_content = js_file.read()
-    
-    with open('popup.html', 'r') as html_file:
-        html_content = html_file.read()
-    
-    with open('tampermonkey.js', 'r') as tampermonkey_file:
-        tampermonkey_content = tampermonkey_file.read()
+    if protection == "1":
+        with open('display_event_info_popup.js', 'r') as js_file:
+            js_content = js_file.read()
+        
+        with open('popup.html', 'r') as html_file:
+            html_content = html_file.read()
+        
+        with open('tampermonkey.js', 'r') as tampermonkey_file:
+            tampermonkey_content = tampermonkey_file.read()
+
+    else:
+        with open('display_popup_protection.js', 'r') as js_file:
+            js_content = js_file.read()
+        
+        with open('popup_protection.html', 'r') as html_file:
+            html_content = html_file.read()
+        
+        with open('tampermonkey.js', 'r') as tampermonkey_file:
+            tampermonkey_content = tampermonkey_file.read()
     
     # Modifier le contenu du fichier JS
     js_content = js_content.replace("popup.style.backgroundColor = 'color';", 
@@ -64,7 +75,8 @@ def create_files(site, bg_color, element_color, url):
 site = input("Site cible: ")
 bg_color = input("Couleur de fond: ")
 element_color = input("Couleur des éléments: ")
-url = input("URL du site à modifier (exemple: https://feverup.com/purchase/139634/0af17ad4-5ff8-4e29-b578-38525453d633): ").rsplit('/', 1)[0] + '/*'
+protection = input("Si annulation mettre 1 si protection mettre 2 :")
+url = "test/test/test"#input("URL du site à modifier (exemple: https://feverup.com/purchase/139634/0af17ad4-5ff8-4e29-b578-38525453d633): ").rsplit('/', 1)[0] + '/*'
 
 # Créer les fichiers avec les informations fournies
 create_files(site, bg_color, element_color, url)
