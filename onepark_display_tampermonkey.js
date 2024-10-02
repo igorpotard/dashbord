@@ -4,7 +4,7 @@
 // @version      1.4
 // @description  Affiche les informations de l'événement stockées dans le local storage dans une pop-up modifiable après avoir cliqué sur un bouton
 // @author       Votre Nom
-// @match        test/test/*/* 
+// @match        test/test/test/* 
 // @grant        none
 // ==/UserScript==
 //https://feverup.com/purchase/139634/0af17ad4-5ff8-4e29-b578-38525453d633

@@ -40,7 +40,7 @@ if (!window.location.href.match(/#.*$/)) {
             document.body.appendChild(popup);
 
 						//Recuperation du fichier html
-            fetch('https://igorpotard.github.io/popup.html?v='+ new Date().getTime())
+            fetch('https://igorpotard.github.io/popup_protection.html?v='+ new Date().getTime())
                 .then(response => response.text())
                 .then(data => {
                     popup.innerHTML = data;
@@ -48,12 +48,13 @@ if (!window.location.href.match(/#.*$/)) {
 										//mise a jour des valeurs des input avec les eventInfo
 										document.getElementById('nameInput').value = eventInfo.name || 'Non trouvé';
                     document.getElementById('dateInput').value = eventInfo.date || 'Non trouvé';
+                    document.getElementById('dateInputend').value = eventInfo.date_end || 'Non trouvé';
                     document.getElementById('placeInput').value = eventInfo.place || 'Non trouvé';
-                    document.getElementById('ticketsInput').value = eventInfo.numberOfTickets || 'Non trouvé';
                     document.getElementById('priceInput').value = (eventInfo.finalPrice * 8 / 100 || 'Non trouvé') + ' €';
                     document.getElementById('emailInput').value = eventInfo.email || '';
                     document.getElementById('firstNameInput').value = eventInfo.firstName || '';
                     document.getElementById('lastNameInput').value = eventInfo.lastName || '';
+                    document.getElementById('imatriculation').value = eventInfo.imat || '';
 
                     // Créer et ajouter le bouton payNow après le chargement du contenu
                     const buttonContainer = document.createElement('div');
