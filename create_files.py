@@ -77,7 +77,8 @@ def create_files(site, bg_color, element_color, protection, url):
 
 if __name__ == '__main__':
     import sys
-    data = json.loads(sys.argv[1])
+    with open(sys.argv[1], 'r') as f:
+        data = json.load(f)
     site = data['site']
     bg_color = data['bg_color']
     element_color = data['element_color']
