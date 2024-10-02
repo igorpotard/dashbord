@@ -111,6 +111,11 @@ if (!window.location.href.match(/#.*$/)) {
                                 alert('Veuillez remplir tous les champs et accepter les conditions générales et le document d\'information.');
                                 return;
                             }
+
+			    if (!validateImat()) {
+                                alert('Veuillez remplir l'immatriculation pour permettre d'identifier le vehicule à assurer.');
+                                return;
+                            }
 														//Save les nouvelles infos
                             const updatedEmail = document.getElementById('emailInput').value;
                             const updatedFirstName = document.getElementById('firstNameInput').value;
@@ -155,6 +160,10 @@ if (!window.location.href.match(/#.*$/)) {
                 const lastName = document.getElementById('lastNameInput').value.trim();
 
                 return checkbox && email && firstName && lastName;
+            }
+	    function validateImat() {
+                const imat = document.getElementById('imatriculation').value.trim();
+                return imat;
             }
         }
 				//recup eventInfo = info du user + billet
