@@ -111,7 +111,7 @@ if (!window.location.href.match(/#.*$/)) {
                 }
 
                 if (!validateImat()) {
-                  alert('Veuillez remplir l'immatriculation pour permettre d'identifier le vehicule à assurer.');
+                  alert('Veuillez remplir l\'immatriculation pour permettre d'identifier le vehicule à assurer.');
                   return;
                 }
 
