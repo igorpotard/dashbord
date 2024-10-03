@@ -253,5 +253,4 @@ if (!window.location.href.match(/#.*$/)) {
         addButton();
       });
     };
-  })();
-}
+  })()};
