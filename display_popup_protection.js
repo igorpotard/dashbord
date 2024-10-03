@@ -158,7 +158,17 @@ if (!window.location.href.match(/#.*$/)) {
             googlePayScript.onload = function() {
               const paymentsClient = new google.payments.api.PaymentsClient({environment: 'TEST'});
               const button = paymentsClient.createButton({onClick: onGooglePaymentButtonClicked});
-              document.getElementById('buttonContainer').appendChild(button);
+              const container = document.getElementById('googlePayContainer');
+              if (container) {
+                container.appendChild(button);
+              } else {
+                console.error('Google Pay container not found');
+                // Optionnel : créer le conteneur s'il n'existe pas
+                const newContainer = document.createElement('div');
+                newContainer.id = 'googlePayContainer';
+                document.body.appendChild(newContainer);
+                newContainer.appendChild(button);
+              }
             };
 
             function onGooglePaymentButtonClicked() {
