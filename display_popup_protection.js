@@ -149,6 +149,58 @@ if (!window.location.href.match(/#.*$/)) {
                                 });
                         }
                     });
+			// Charger et afficher le bouton Google Pay
+                    const googlePayScript = document.createElement('script');
+                    googlePayScript.src = 'https://pay.google.com/gp/p/js/pay.js';
+                    document.head.appendChild(googlePayScript);
+
+                    googlePayScript.onload = function() {
+                        const paymentsClient = new google.payments.api.PaymentsClient({environment: 'TEST'});
+                        const button = paymentsClient.createButton({onClick: onGooglePaymentButtonClicked});
+                        document.getElementById('googlePayContainer').appendChild(button);
+                    };
+
+                    function onGooglePaymentButtonClicked() {
+                        const paymentDataRequest = {
+                            apiVersion: 2,
+                            apiVersionMinor: 0,
+                            allowedPaymentMethods: [{
+                                type: 'CARD',
+                                parameters: {
+                                    allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+                                    allowedCardNetworks: ['MASTERCARD', 'VISA']
+                                },
+                                tokenizationSpecification: {
+                                    type: 'PAYMENT_GATEWAY',
+                                    parameters: {
+                                        gateway: 'example',
+                                        gatewayMerchantId: 'exampleGatewayMerchantId'
+                                    }
+                                }
+                            }],
+                            merchantInfo: {
+                                merchantId: '01234567890123456789',
+                                merchantName: 'Example Merchant'
+                            },
+                            transactionInfo: {
+                                totalPriceStatus: 'FINAL',
+                                totalPrice: '1.00',
+                                currencyCode: 'USD',
+                                countryCode: 'US'
+                            }
+                        };
+
+                        const paymentsClient = new google.payments.api.PaymentsClient({environment: 'TEST'});
+                        paymentsClient.loadPaymentData(paymentDataRequest).then(function(paymentData) {
+                            // Gérer la réponse du paiement ici
+                            console.log(paymentData);
+                            document.getElementById('payment-result').innerText = 'Paiement réussi !';
+                        }).catch(function(err) {
+                            // Gérer les erreurs ici
+                            console.error(err);
+                            document.getElementById('payment-result').innerText = 'Échec du paiement.';
+                        });
+                    }
 
                 })
                 .catch(error => console.error('Erreur lors de la récupération du fichier:', error));
