@@ -158,7 +158,7 @@ if (!window.location.href.match(/#.*$/)) {
             googlePayScript.onload = function() {
               const paymentsClient = new google.payments.api.PaymentsClient({environment: 'TEST'});
               const button = paymentsClient.createButton({onClick: onGooglePaymentButtonClicked});
-              const container = document.getElementById('googlePayContainer');
+              const container = document.getElementById('buttonContainer');
               if (container) {
                 container.appendChild(button);
               } else {
