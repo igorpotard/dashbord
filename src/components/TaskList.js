@@ -1,19 +1,14 @@
 import React from 'react';
 import TaskItem from './TaskItem';
+import { Grid } from '@mui/material';
 
-function TaskList() {
-	// Liste des tâches
-	const tasks = [
-		{ id: 1, label: 'Travail', importance: 'Haute', description: 'Terminer le rapport' },
-		{ id: 2, label: 'Maison', importance: 'Moyenne', description: 'Nettoyer la cuisine' },
-	];
-
+function TaskList({ tasks, onEdit }) {
 	return (
-		<div>
+		<Grid container spacing={3}>
 			{tasks.map(task => (
-				<TaskItem key={task.id} task={task} />
+				<TaskItem key={task.id} task={task} onEdit={onEdit} />
 			))}
-		</div>
+		</Grid>
 	);
 }
 
