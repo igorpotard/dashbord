@@ -17,21 +17,17 @@ Ce projet vise à créer une application de gestion de tâches personnalisée. L
 1. Clonez le repository :
    ```bash
    git clone https://github.com/igorpotard/igorpotard.github.io.git
-   ```
 2. Installez les dépendances :
    ```bash
    npm install
-   ```
 3. Lancez l'application en mode développement :
    ```bash
-   npm start
-   ```
+   npm start```
 
 ## Déploiement
 Pour déployer l'application sur GitHub Pages :
-   ```bash
-   npm run deploy
-   ```
-
+    ```bash
+    npm run deploy
+    
 ## Contributeurs
 - Serra/Igor Potard (https://github.com/igorpotard)
