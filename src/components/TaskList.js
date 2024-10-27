@@ -1,14 +1,20 @@
 import React from 'react';
 import TaskItem from './TaskItem';
-import { Grid } from '@mui/material';
+import { Box } from '@mui/material';
 
-function TaskList({ tasks, onEdit }) {
+function TaskList({ tasks, onEdit, onUpdateStatus }) {
 	return (
-		<Grid container spacing={3}>
-			{tasks.map(task => (
-				<TaskItem key={task.id} task={task} onEdit={onEdit} />
+		<Box sx={{ px: 1 }}>
+			{tasks.map((task, index) => (
+				<TaskItem
+					key={task.id}
+					task={task}
+					index={index}
+					onEdit={onEdit}
+					onUpdateStatus={onUpdateStatus}
+				/>
 			))}
-		</Grid>
+		</Box>
 	);
 }
 
