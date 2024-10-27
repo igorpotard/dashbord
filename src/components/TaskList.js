@@ -2,12 +2,11 @@ import React from 'react';
 import TaskItem from './TaskItem';
 import { Box } from '@mui/material';
 
-function TaskList({ tasks, onEdit, onUpdateStatus }) {
+function TaskList({ tasks, labels, onEdit, onUpdateStatus }) {
 	if (!Array.isArray(tasks)) {
 		console.warn('Tasks is not an array:', tasks);
 		return null;
 	}
-
 	return (
 		<Box sx={{
 			minHeight: 5,
@@ -20,6 +19,7 @@ function TaskList({ tasks, onEdit, onUpdateStatus }) {
 				<TaskItem
 					key={task.id}
 					task={task}
+					labels={labels}
 					index={index}
 					onEdit={onEdit}
 					onUpdateStatus={onUpdateStatus}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Typography, Button, Box, Paper } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import TaskForm from './components/TaskForm';
@@ -6,13 +6,14 @@ import TaskList from './components/TaskList';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 function App() {
-    const [tasks, setTasks] = useState({
-        todo: [],
-        inProgress: [],
-        completed: []
-    });
-    const [open, setOpen] = useState(false);
-    const [editTask, setEditTask] = useState(null);
+	const [tasks, setTasks] = useState({
+		todo: [],
+		inProgress: [],
+		completed: []
+	});
+	const [labels, setLabels] = useState([]);
+	const [open, setOpen] = useState(false);
+	const [editTask, setEditTask] = useState(null);
 
     const onDragEnd = (result) => {
         if (!result.destination) return;
@@ -54,23 +55,35 @@ function App() {
         }
     };
 
-    // Fonction pour ajouter une nouvelle tâche
-    const addTask = (title, description, priority, deadline) => {
-        const newTask = {
-            id: Date.now().toString(),
-            title,
-            description,
-            priority,
-            deadline,
-            status: 'todo'
-        };
-        
-        setTasks(prev => ({
-            ...prev,
-            todo: [...prev.todo, newTask]
-        }));
-        setOpen(false);
-    };
+	// Charger les labels depuis localStorage au démarrage
+	useEffect(() => {
+		const savedLabels = localStorage.getItem('labels');
+		if (savedLabels) {
+			setLabels(JSON.parse(savedLabels));
+		}
+	}, []);
+	// Sauvegarder les labels dans localStorage quand ils changent
+	useEffect(() => {
+		localStorage.setItem('labels', JSON.stringify(labels));
+	}, [labels]);
+
+	// Fonction pour ajouter un nouveau label
+	const addLabel = (newLabel) => {
+		setLabels(prev => [...prev, newLabel]);
+	};
+
+		const addTask = (taskData) => {
+				const newTask = {
+						id: Date.now().toString(),
+						...taskData,
+						status: 'todo'
+				};
+				setTasks(prev => ({
+						...prev,
+						todo: [...prev.todo, newTask]
+				}));
+				setOpen(false);
+		};
 
     // Fonction pour mettre à jour une tâche existante
     const updateTask = (updatedTask) => {
@@ -183,6 +196,7 @@ function App() {
                                     
                                     <TaskList
                                         tasks={tasks[status]}
+                                        labels={labels}
                                         onEdit={handleEditTask}
                                         onUpdateStatus={updateTaskStatus}
                                     />
@@ -203,6 +217,8 @@ function App() {
                 addTask={addTask}
                 editTask={editTask}
                 updateTask={updateTask}
+                labels={labels}
+                onAddLabel={addLabel}
             />
         </Container>
     );
