@@ -65,8 +65,8 @@ function TaskItem({ task, index, onEdit, onUpdateStatus }) {
                             backgroundColor: statusColors[task.status] || '#fff',
                             transition: 'all 0.2s ease',
                             cursor: 'pointer',
-                            border: snapshot.isDragging ? '3px solid red' : '1px solid transparent',
-                            boxShadow: snapshot.isDragging ? '0 0 10px rgba(255,0,0,0.5)' : 'none',
+                            border: snapshot.isDragging ? '1px solid black' : '1px solid transparent',
+                            boxShadow: snapshot.isDragging ? '0 0 10px rgba(125,125,125,0.5)' : 'none',
                             transform: snapshot.isDragging ? 'scale(1.02)' : 'none',
                             '&:hover': {
                                 transform: 'translateY(-2px)',
