@@ -9,15 +9,16 @@ import {
     CheckCircle, 
     PlayArrow, 
     ArrowBack,
-    DragIndicator
+    DragIndicator,
+    Edit
 } from '@mui/icons-material';
 import { Draggable } from 'react-beautiful-dnd';
 
 const priorityColors = {
-    '1': '#4caf50', // Vert pour basse priorité
-    '2': '#ff9800', // Orange pour moyenne priorité
-    '3': '#f57c00', // Orange foncé pour haute priorité
-    '4': '#f44336', // Rouge pour très haute priorité
+    '1': '#4caf50',
+    '2': '#ff9800',
+    '3': '#f57c00',
+    '4': '#f44336',
 };
 
 const priorityIcons = {
@@ -44,66 +45,101 @@ function TaskItem({ task, index, onEdit, onUpdateStatus }) {
         });
     };
 
+    console.log('TaskItem rendering:', { taskId: task.id, index }); // Debug log
+
     return (
-        <Draggable draggableId={task.id} index={index}>
-            {(provided, snapshot) => (
-                <Card
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    sx={{
-                        mb: 2,
-                        position: 'relative',
-                        backgroundColor: statusColors[task.status] || '#fff',
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                            transform: 'translateY(-2px)',
-                            boxShadow: 3,
-                        },
-                        opacity: snapshot.isDragging ? 0.9 : 1,
-                    }}
-                >
-                    <Box
-                        {...provided.dragHandleProps}
+        <Draggable draggableId={task.id.toString()} index={index}>
+            {(provided, snapshot) => {
+                console.log('Draggable state:', { 
+                    isDragging: snapshot.isDragging, 
+                    taskId: task.id 
+                }); // Debug log
+                
+                return (
+                    <Card
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
                         sx={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: -20,
-                            transform: 'translateY(-50%)',
-                            cursor: 'grab',
-                            display: 'flex',
-                            alignItems: 'center',
-                            opacity: 0.3,
-                            '&:hover': { opacity: 1 }
+                            mb: 2,
+                            position: 'relative',
+                            backgroundColor: statusColors[task.status] || '#fff',
+                            transition: 'all 0.2s ease',
+                            cursor: 'pointer',
+                            border: snapshot.isDragging ? '3px solid red' : '1px solid transparent',
+                            boxShadow: snapshot.isDragging ? '0 0 10px rgba(255,0,0,0.5)' : 'none',
+                            transform: snapshot.isDragging ? 'scale(1.02)' : 'none',
+                            '&:hover': {
+                                transform: 'translateY(-2px)',
+                                boxShadow: 3,
+                            },
+                            '&:active': {
+                                transform: 'scale(1.02)',
+                                border: '3px solid red',
+                            }
                         }}
                     >
-                        <DragIndicator />
-                    </Box>
+                        <div
+                            {...provided.dragHandleProps}
+                            style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                cursor: 'move',
+                            }}
+                        />
 
-                    <CardContent sx={{ pb: '16px !important' }}>
-                        <Box onClick={() => onEdit(task)} sx={{ cursor: 'pointer' }}>
-                            <Typography 
-                                variant="h6" 
-                                component="div" 
-                                sx={{
-                                    mb: 1,
-                                    textDecoration: task.status === 'completed' ? 'line-through' : 'none',
-                                    color: task.status === 'completed' ? 'text.secondary' : 'text.primary'
-                                }}
-                            >
-                                {task.title}
-                            </Typography>
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: -20,
+                                transform: 'translateY(-50%)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                opacity: 0.3,
+                                '&:hover': { opacity: 1 }
+                            }}
+                        >
+                            <DragIndicator />
+                        </Box>
+
+                        <CardContent>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                                <Typography 
+                                    variant="h6" 
+                                    component="div" 
+                                    sx={{
+                                        textDecoration: task.status === 'completed' ? 'line-through' : 'none',
+                                        color: task.status === 'completed' ? 'text.secondary' : 'text.primary',
+                                        pointerEvents: 'none' // Important pour le drag
+                                    }}
+                                >
+                                    {task.title}
+                                </Typography>
+                                <IconButton 
+                                    size="small" 
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onEdit(task);
+                                    }}
+                                >
+                                    <Edit fontSize="small" />
+                                </IconButton>
+                            </Box>
 
                             {task.description && (
                                 <Typography 
                                     variant="body2" 
                                     color="text.secondary" 
-                                    sx={{ mb: 2 }}
+                                    sx={{ mb: 2, pointerEvents: 'none' }} // Important pour le drag
                                 >
                                     {task.description}
                                 </Typography>
                             )}
 
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2, pointerEvents: 'none' }}>
                                 <Chip
                                     icon={priorityIcons[task.priority]}
                                     label={`Priorité ${task.priority}`}
@@ -131,57 +167,69 @@ function TaskItem({ task, index, onEdit, onUpdateStatus }) {
                                     />
                                 )}
                             </Box>
-                        </Box>
 
-                        <Box 
-                            sx={{ 
-                                display: 'flex', 
-                                justifyContent: 'flex-end',
-                                gap: 1
-                            }}
-                        >
-                            {task.status !== 'todo' && (
-                                <IconButton
-                                    size="small"
-                                    onClick={() => onUpdateStatus(task.id, 'todo')}
-                                    sx={{
-                                        backgroundColor: '#e3f2fd',
-                                        '&:hover': { backgroundColor: '#bbdefb' }
-                                    }}
-                                >
-                                    <ArrowBack sx={{ fontSize: 20 }} />
-                                </IconButton>
-                            )}
+                            <Box 
+                                sx={{ 
+                                    display: 'flex', 
+                                    justifyContent: 'flex-end',
+                                    gap: 1,
+                                    position: 'relative',
+                                    zIndex: 2
+                                }}
+                                onClick={e => e.stopPropagation()} // Pour que les boutons fonctionnent
+                            >
+                                {task.status !== 'todo' && (
+                                    <IconButton
+                                        size="small"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onUpdateStatus(task.id, 'todo');
+                                        }}
+                                        sx={{
+                                            backgroundColor: '#e3f2fd',
+                                            '&:hover': { backgroundColor: '#bbdefb' }
+                                        }}
+                                    >
+                                        <ArrowBack sx={{ fontSize: 20 }} />
+                                    </IconButton>
+                                )}
 
-                            {task.status !== 'inProgress' && (
-                                <IconButton
-                                    size="small"
-                                    onClick={() => onUpdateStatus(task.id, 'inProgress')}
-                                    sx={{
-                                        backgroundColor: '#fff3e0',
-                                        '&:hover': { backgroundColor: '#ffe0b2' }
-                                    }}
-                                >
-                                    <PlayArrow sx={{ fontSize: 20 }} />
-                                </IconButton>
-                            )}
+                                {task.status !== 'inProgress' && (
+                                    <IconButton
+                                        size="small"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onUpdateStatus(task.id, 'inProgress');
+                                        }}
+                                        sx={{
+                                            backgroundColor: '#fff3e0',
+                                            '&:hover': { backgroundColor: '#ffe0b2' }
+                                        }}
+                                    >
+                                        <PlayArrow sx={{ fontSize: 20 }} />
+                                    </IconButton>
+                                )}
 
-                            {task.status !== 'completed' && (
-                                <IconButton
-                                    size="small"
-                                    onClick={() => onUpdateStatus(task.id, 'completed')}
-                                    sx={{
-                                        backgroundColor: '#e8f5e9',
-                                        '&:hover': { backgroundColor: '#c8e6c9' }
-                                    }}
-                                >
-                                    <CheckCircle sx={{ fontSize: 20 }} />
-                                </IconButton>
-                            )}
-                        </Box>
-                    </CardContent>
-                </Card>
-            )}
+                                {task.status !== 'completed' && (
+                                    <IconButton
+                                        size="small"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onUpdateStatus(task.id, 'completed');
+                                        }}
+                                        sx={{
+                                            backgroundColor: '#e8f5e9',
+                                            '&:hover': { backgroundColor: '#c8e6c9' }
+                                        }}
+                                    >
+                                        <CheckCircle sx={{ fontSize: 20 }} />
+                                    </IconButton>
+                                )}
+                            </Box>
+                        </CardContent>
+                    </Card>
+                );
+            }}
         </Draggable>
     );
 }

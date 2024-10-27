@@ -14,6 +14,46 @@ function App() {
     const [open, setOpen] = useState(false);
     const [editTask, setEditTask] = useState(null);
 
+    const onDragEnd = (result) => {
+        if (!result.destination) return;
+
+        const { source, destination } = result;
+
+        // Si on déplace dans la même colonne
+        if (source.droppableId === destination.droppableId) {
+            const column = tasks[source.droppableId];
+            const newTasks = Array.from(column);
+            const [removed] = newTasks.splice(source.index, 1);
+            newTasks.splice(destination.index, 0, removed);
+
+            setTasks({
+                ...tasks,
+                [source.droppableId]: newTasks
+            });
+        } else {
+            // Si on déplace dans une autre colonne
+            const sourceColumn = tasks[source.droppableId];
+            const destColumn = tasks[destination.droppableId];
+            const sourceTasks = Array.from(sourceColumn);
+            const destTasks = Array.from(destColumn);
+            const [removed] = sourceTasks.splice(source.index, 1);
+            
+            // Mise à jour du statut de la tâche
+            const updatedTask = {
+                ...removed,
+                status: destination.droppableId
+            };
+            
+            destTasks.splice(destination.index, 0, updatedTask);
+
+            setTasks({
+                ...tasks,
+                [source.droppableId]: sourceTasks,
+                [destination.droppableId]: destTasks
+            });
+        }
+    };
+
     // Fonction pour ajouter une nouvelle tâche
     const addTask = (title, description, priority, deadline) => {
         const newTask = {
@@ -79,39 +119,6 @@ function App() {
         }
     };
 
-    const onDragEnd = (result) => {
-        const { source, destination } = result;
-
-        if (!destination) return;
-
-        const sourceList = tasks[source.droppableId];
-        const destList = tasks[destination.droppableId];
-        
-        if (source.droppableId === destination.droppableId) {
-            const reorderedItems = Array.from(sourceList);
-            const [removed] = reorderedItems.splice(source.index, 1);
-            reorderedItems.splice(destination.index, 0, removed);
-
-            setTasks({
-                ...tasks,
-                [source.droppableId]: reorderedItems
-            });
-        } else {
-            const sourceItems = Array.from(sourceList);
-            const destItems = Array.from(destList);
-            const [removed] = sourceItems.splice(source.index, 1);
-            
-            // Mettre à jour le statut de la tâche
-            const updatedTask = { ...removed, status: destination.droppableId };
-            destItems.splice(destination.index, 0, updatedTask);
-
-            setTasks({
-                ...tasks,
-                [source.droppableId]: sourceItems,
-                [destination.droppableId]: destItems
-            });
-        }
-    };
 
     const getColumnTitle = (status) => {
         switch (status) {
@@ -134,26 +141,13 @@ function App() {
     return (
         <Container maxWidth="xl" sx={{ py: 4 }}>
             <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography 
-                    variant="h4" 
-                    component="h1" 
-                    sx={{ 
-                        fontWeight: 'bold',
-                        color: '#1976d2'
-                    }}
-                >
+                <Typography variant="h4" component="h1">
                     Ma Todo List
                 </Typography>
                 <Button
                     variant="contained"
                     startIcon={<Add />}
                     onClick={() => setOpen(true)}
-                    sx={{
-                        borderRadius: 2,
-                        textTransform: 'none',
-                        py: 1,
-                        px: 3
-                    }}
                 >
                     Nouvelle tâche
                 </Button>
@@ -166,35 +160,27 @@ function App() {
                     gap: 3,
                     minHeight: '70vh'
                 }}>
-                    {['todo', 'inProgress', 'completed'].map((status) => (
+                    {Object.keys(tasks).map((status) => (
                         <Droppable key={status} droppableId={status}>
                             {(provided, snapshot) => (
                                 <Paper
                                     ref={provided.innerRef}
                                     {...provided.droppableProps}
-                                    elevation={0}
+                                    elevation={1}
                                     sx={{
                                         p: 2,
                                         backgroundColor: snapshot.isDraggingOver 
                                             ? '#f5f5f5'
                                             : getColumnColor(status),
-                                        borderRadius: 2,
-                                        transition: 'background-color 0.2s ease',
-                                        border: '1px solid',
-                                        borderColor: 'grey.200'
+                                        minHeight: 200,
+                                        display: 'flex',
+                                        flexDirection: 'column'
                                     }}
                                 >
-                                    <Typography 
-                                        variant="h6" 
-                                        sx={{ 
-                                            mb: 3,
-                                            fontWeight: 'bold',
-                                            color: 'grey.800',
-                                            textAlign: 'center'
-                                        }}
-                                    >
+                                    <Typography variant="h6" sx={{ mb: 2 }}>
                                         {getColumnTitle(status)}
                                     </Typography>
+                                    
                                     <TaskList
                                         tasks={tasks[status]}
                                         onEdit={handleEditTask}
