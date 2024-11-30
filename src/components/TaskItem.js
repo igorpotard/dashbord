@@ -1,17 +1,18 @@
 import React from 'react';
 import { Card, CardContent, Typography, IconButton, Box, Chip, Tooltip } from '@mui/material';
 import {
-	PriorityHigh,
-	LowPriority,
-	Warning,
-	Error,
-	Event,
-	Label as LabelIcon,
-	CheckCircle,
-	PlayArrow,
-	ArrowBack,
-	DragIndicator,
-	Edit
+    PriorityHigh,
+    LowPriority,
+    Warning,
+    Error,
+    Event,
+    Label as LabelIcon,
+    CheckCircle,
+    PlayArrow,
+    ArrowBack,
+    DragIndicator,
+    Edit,
+    Delete
 } from '@mui/icons-material';
 import { Draggable } from 'react-beautiful-dnd';
 
@@ -42,15 +43,15 @@ const statusColors = {
     completed: '#e8f5e9'
 };
 
-function TaskItem({ task, labels, index, onEdit, onUpdateStatus }) {
-	const getFormattedDate = (dateString) => {
-		if (!dateString) return null;
-		const date = new Date(dateString);
-		return date.toLocaleDateString('fr-FR', {
-			day: '2-digit',
-			month: '2-digit',
-		});
-	};
+function TaskItem({ task, labels, index, onEdit, onUpdateStatus, onDelete }) {
+    const getFormattedDate = (dateString) => {
+        if (!dateString) return null;
+        const date = new Date(dateString);
+        return date.toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: '2-digit',
+        });
+    };
 
     return (
         <Draggable draggableId={task.id.toString()} index={index}>
@@ -66,8 +67,8 @@ function TaskItem({ task, labels, index, onEdit, onUpdateStatus }) {
                         transition: 'all 0.2s ease',
                         cursor: 'grab',
                         borderLeft: `8px solid ${priorityColors[task.priority]}`,
-                        boxShadow: snapshot.isDragging 
-                            ? '0 8px 16px rgba(0,0,0,0.1)' 
+                        boxShadow: snapshot.isDragging
+                            ? '0 8px 16px rgba(0,0,0,0.1)'
                             : '0 2px 4px rgba(0,0,0,0.05)',
                         transform: snapshot.isDragging ? 'scale(1.02)' : 'none',
                         '&:hover': {
@@ -82,15 +83,15 @@ function TaskItem({ task, labels, index, onEdit, onUpdateStatus }) {
                 >
                     <CardContent sx={{ py: 1, px: 2, '&:last-child': { pb: 1 } }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <DragIndicator 
-                                sx={{ 
-                                    fontSize: 18, 
+                            <DragIndicator
+                                sx={{
+                                    fontSize: 18,
                                     color: 'text.secondary',
                                     opacity: 0.5,
                                     mr: 0.5
-                                }} 
+                                }}
                             />
-                            
+
                             {/* Badge de priorité */}
                             <Chip
                                 icon={priorityIcons[task.priority]}
@@ -111,14 +112,18 @@ function TaskItem({ task, labels, index, onEdit, onUpdateStatus }) {
                                 }}
                             />
 
-                            <Typography 
-                                variant="body1" 
-                                component="div" 
+                            <Typography
+                                variant="body1"
+                                component="div"
                                 sx={{
                                     fontWeight: 500,
                                     flex: 1,
                                     textDecoration: task.status === 'completed' ? 'line-through' : 'none',
                                     color: task.status === 'completed' ? 'text.secondary' : 'text.primary',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    maxWidth: '200px' // Limite la largeur du titre
                                 }}
                             >
                                 {task.title}
@@ -137,7 +142,7 @@ function TaskItem({ task, labels, index, onEdit, onUpdateStatus }) {
                                         }}
                                     />
                                 )}
-								{task.labels && task.labels.length > 0 && (
+                                {task.labels && task.labels.length > 0 && (
                                     <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
                                         {task.labels.map(labelId => {
                                             const label = labels.find(l => l.id === labelId);
@@ -166,8 +171,8 @@ function TaskItem({ task, labels, index, onEdit, onUpdateStatus }) {
                                     </Box>
                                 )}
 
-                                <Box sx={{ 
-                                    display: 'flex', 
+                                <Box sx={{
+                                    display: 'flex',
                                     gap: 0.5,
                                     backgroundColor: 'rgba(0,0,0,0.03)',
                                     borderRadius: 1,
@@ -181,10 +186,10 @@ function TaskItem({ task, labels, index, onEdit, onUpdateStatus }) {
                                                     e.stopPropagation();
                                                     onUpdateStatus(task.id, 'todo');
                                                 }}
-                                                sx={{ 
+                                                sx={{
                                                     padding: 0.5,
                                                     backgroundColor: '#e3f2fd',
-                                                    '&:hover': { 
+                                                    '&:hover': {
                                                         backgroundColor: '#bbdefb',
                                                     }
                                                 }}
@@ -202,10 +207,10 @@ function TaskItem({ task, labels, index, onEdit, onUpdateStatus }) {
                                                     e.stopPropagation();
                                                     onUpdateStatus(task.id, 'inProgress');
                                                 }}
-                                                sx={{ 
+                                                sx={{
                                                     padding: 0.5,
                                                     backgroundColor: '#fff3e0',
-                                                    '&:hover': { 
+                                                    '&:hover': {
                                                         backgroundColor: '#ffe0b2',
                                                     }
                                                 }}
@@ -223,10 +228,10 @@ function TaskItem({ task, labels, index, onEdit, onUpdateStatus }) {
                                                     e.stopPropagation();
                                                     onUpdateStatus(task.id, 'completed');
                                                 }}
-                                                sx={{ 
+                                                sx={{
                                                     padding: 0.5,
                                                     backgroundColor: '#e8f5e9',
-                                                    '&:hover': { 
+                                                    '&:hover': {
                                                         backgroundColor: '#c8e6c9',
                                                     }
                                                 }}
@@ -237,15 +242,15 @@ function TaskItem({ task, labels, index, onEdit, onUpdateStatus }) {
                                     )}
 
                                     <Tooltip title="Modifier">
-                                        <IconButton 
-                                            size="small" 
+                                        <IconButton
+                                            size="small"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 onEdit(task);
                                             }}
-                                            sx={{ 
+                                            sx={{
                                                 padding: 0.5,
-                                                '&:hover': { 
+                                                '&:hover': {
                                                     backgroundColor: 'rgba(0,0,0,0.1)',
                                                 }
                                             }}
@@ -253,15 +258,33 @@ function TaskItem({ task, labels, index, onEdit, onUpdateStatus }) {
                                             <Edit sx={{ fontSize: 18 }} />
                                         </IconButton>
                                     </Tooltip>
+
+                                    <Tooltip title="Supprimer">
+                                        <IconButton
+                                            size="small"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onDelete(task.id);
+                                            }}
+                                            sx={{
+                                                padding: 0.5,
+                                                '&:hover': {
+                                                    backgroundColor: 'rgba(0,0,0,0.1)',
+                                                }
+                                            }}
+                                        >
+                                            <Delete sx={{ fontSize: 18 }} />
+                                        </IconButton>
+                                    </Tooltip>
                                 </Box>
                             </Box>
                         </Box>
 
                         {task.description && (
-                            <Typography 
-                                variant="body2" 
+                            <Typography
+                                variant="body2"
                                 color="text.secondary"
-                                sx={{ 
+                                sx={{
                                     mt: 0.5,
                                     fontSize: '0.75rem',
                                     display: '-webkit-box',

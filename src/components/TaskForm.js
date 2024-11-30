@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { 
-    Dialog, 
-    DialogActions, 
-    DialogContent, 
-    DialogTitle, 
-    TextField, 
-    Button, 
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    TextField,
+    Button,
     MenuItem,
     Box,
     Chip,
     IconButton,
     Typography
 } from '@mui/material';
-import { Plus as AddIcon, Tag as LabelIcon } from 'lucide-react';
+import { Plus as AddIcon, Tag as LabelIcon, Delete as DeleteIcon } from 'lucide-react';
 
 const priorities = [
     { value: '1', label: 'Basse' },
@@ -21,14 +21,14 @@ const priorities = [
     { value: '4', label: 'Très Haute' }
 ];
 
-function TaskForm({ open, onClose, addTask, editTask, updateTask, labels, onAddLabel }) {
+function TaskForm({ open, onClose, addTask, editTask, updateTask, labels, onAddLabel, onDeleteLabel }) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [priority, setPriority] = useState('');
     const [deadline, setDeadline] = useState('');
     const [selectedLabels, setSelectedLabels] = useState([]);
     const [error, setError] = useState(false);
-    
+
     // États pour le nouveau label
     const [showNewLabel, setShowNewLabel] = useState(false);
     const [newLabelName, setNewLabelName] = useState('');
@@ -52,14 +52,14 @@ function TaskForm({ open, onClose, addTask, editTask, updateTask, labels, onAddL
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         if (title.trim() === '') {
             setError(true);
             return;
         }
-        
+
         setError(false);
-        
+
         const taskData = {
             title,
             description,
@@ -67,7 +67,7 @@ function TaskForm({ open, onClose, addTask, editTask, updateTask, labels, onAddL
             deadline,
             labels: selectedLabels
         };
-        
+
         if (editTask) {
             updateTask({
                 ...editTask,
@@ -102,11 +102,16 @@ function TaskForm({ open, onClose, addTask, editTask, updateTask, labels, onAddL
     };
 
     const toggleLabel = (labelId) => {
-        setSelectedLabels(prev => 
+        setSelectedLabels(prev =>
             prev.includes(labelId)
                 ? prev.filter(id => id !== labelId)
                 : [...prev, labelId]
         );
+    };
+
+    const handleDeleteLabel = (labelId) => {
+        onDeleteLabel(labelId);
+        setSelectedLabels(prev => prev.filter(id => id !== labelId));
     };
 
     return (
@@ -115,25 +120,25 @@ function TaskForm({ open, onClose, addTask, editTask, updateTask, labels, onAddL
                 {editTask ? "Modifier la tâche" : "Créer une tâche"}
             </DialogTitle>
             <DialogContent>
-                <TextField 
-                    autoFocus 
-                    margin="dense" 
-                    label="Titre de la tâche" 
-                    fullWidth 
-                    value={title} 
-                    onChange={(e) => setTitle(e.target.value)} 
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    label="Titre de la tâche"
+                    fullWidth
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                     error={error}
                     helperText={error ? "Le titre est requis" : ""}
                     sx={{ mb: 2 }}
                 />
-                <TextField 
-                    margin="dense" 
-                    label="Description" 
-                    fullWidth 
+                <TextField
+                    margin="dense"
+                    label="Description"
+                    fullWidth
                     multiline
                     rows={4}
-                    value={description} 
-                    onChange={(e) => setDescription(e.target.value)} 
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
                     sx={{ mb: 2 }}
                 />
                 <TextField
@@ -171,25 +176,33 @@ function TaskForm({ open, onClose, addTask, editTask, updateTask, labels, onAddL
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 1 }}>
                         {labels.map((label) => (
-                            <Chip
-                                key={label.id}
-                                label={label.name}
-                                icon={<LabelIcon className="w-4 h-4" />}
-                                onClick={() => toggleLabel(label.id)}
-                                color={selectedLabels.includes(label.id) ? "primary" : "default"}
-                                sx={{
-                                    backgroundColor: selectedLabels.includes(label.id) 
-                                        ? `${label.color}40`
-                                        : 'default',
-                                    borderColor: label.color,
-                                    '& .MuiChip-icon': {
-                                        color: label.color
-                                    }
-                                }}
-                            />
+                            <Box key={label.id} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Chip
+                                    label={label.name}
+                                    icon={<LabelIcon className="w-4 h-4" />}
+                                    onClick={() => toggleLabel(label.id)}
+                                    color={selectedLabels.includes(label.id) ? "primary" : "default"}
+                                    sx={{
+                                        backgroundColor: selectedLabels.includes(label.id)
+                                            ? `${label.color}40`
+                                            : 'default',
+                                        borderColor: label.color,
+                                        '& .MuiChip-icon': {
+                                            color: label.color
+                                        }
+                                    }}
+                                />
+                                <IconButton
+                                    size="small"
+                                    onClick={() => handleDeleteLabel(label.id)}
+                                    sx={{ ml: 1 }}
+                                >
+                                    <DeleteIcon className="w-4 h-4" />
+                                </IconButton>
+                            </Box>
                         ))}
-                        <IconButton 
-                            size="small" 
+                        <IconButton
+                            size="small"
                             onClick={() => setShowNewLabel(true)}
                             sx={{ ml: 1 }}
                         >

@@ -6,14 +6,14 @@ import TaskList from './components/TaskList';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 function App() {
-	const [tasks, setTasks] = useState({
-		todo: [],
-		inProgress: [],
-		completed: []
-	});
-	const [labels, setLabels] = useState([]);
-	const [open, setOpen] = useState(false);
-	const [editTask, setEditTask] = useState(null);
+    const [tasks, setTasks] = useState({
+        todo: [],
+        inProgress: [],
+        completed: []
+    });
+    const [labels, setLabels] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [editTask, setEditTask] = useState(null);
 
     const onDragEnd = (result) => {
         if (!result.destination) return;
@@ -38,13 +38,13 @@ function App() {
             const sourceTasks = Array.from(sourceColumn);
             const destTasks = Array.from(destColumn);
             const [removed] = sourceTasks.splice(source.index, 1);
-            
+
             // Mise à jour du statut de la tâche
             const updatedTask = {
                 ...removed,
                 status: destination.droppableId
             };
-            
+
             destTasks.splice(destination.index, 0, updatedTask);
 
             setTasks({
@@ -55,39 +55,44 @@ function App() {
         }
     };
 
-	// Charger les labels depuis localStorage au démarrage
-	useEffect(() => {
-		const savedLabels = localStorage.getItem('labels');
-		if (savedLabels) {
-			setLabels(JSON.parse(savedLabels));
-		}
-	}, []);
-	// Sauvegarder les labels dans localStorage quand ils changent
-	useEffect(() => {
-		localStorage.setItem('labels', JSON.stringify(labels));
-	}, [labels]);
+    // Charger les labels depuis localStorage au démarrage
+    useEffect(() => {
+        const savedLabels = localStorage.getItem('labels');
+        if (savedLabels) {
+            setLabels(JSON.parse(savedLabels));
+        }
+    }, []);
+    // Sauvegarder les labels dans localStorage quand ils changent
+    useEffect(() => {
+        localStorage.setItem('labels', JSON.stringify(labels));
+    }, [labels]);
 
-	// Fonction pour ajouter un nouveau label
-	const addLabel = (newLabel) => {
-		setLabels(prev => [...prev, newLabel]);
-	};
+    // Fonction pour ajouter un nouveau label
+    const addLabel = (newLabel) => {
+        setLabels(prev => [...prev, newLabel]);
+    };
 
-		const addTask = (taskData) => {
-				const newTask = {
-						id: Date.now().toString(),
-						...taskData,
-						status: 'todo'
-				};
-				setTasks(prev => ({
-						...prev,
-						todo: [...prev.todo, newTask]
-				}));
-				setOpen(false);
-		};
+    // Fonction pour supprimer un label
+    const deleteLabel = (labelId) => {
+        setLabels(prev => prev.filter(label => label.id !== labelId));
+    };
+
+    const addTask = (taskData) => {
+        const newTask = {
+            id: Date.now().toString(),
+            ...taskData,
+            status: 'todo'
+        };
+        setTasks(prev => ({
+            ...prev,
+            todo: [...prev.todo, newTask]
+        }));
+        setOpen(false);
+    };
 
     // Fonction pour mettre à jour une tâche existante
     const updateTask = (updatedTask) => {
-        const currentStatus = Object.keys(tasks).find(status => 
+        const currentStatus = Object.keys(tasks).find(status =>
             tasks[status].some(task => task.id === updatedTask.id)
         );
 
@@ -132,6 +137,19 @@ function App() {
         }
     };
 
+    // Fonction pour supprimer une tâche
+    const deleteTask = (taskId) => {
+        const currentStatus = Object.keys(tasks).find(status =>
+            tasks[status].some(task => task.id === taskId)
+        );
+
+        if (currentStatus) {
+            setTasks(prev => ({
+                ...prev,
+                [currentStatus]: prev[currentStatus].filter(task => task.id !== taskId)
+            }));
+        }
+    };
 
     const getColumnTitle = (status) => {
         switch (status) {
@@ -167,7 +185,7 @@ function App() {
             </Box>
 
             <DragDropContext onDragEnd={onDragEnd}>
-                <Box sx={{ 
+                <Box sx={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(3, 1fr)',
                     gap: 3,
@@ -182,7 +200,7 @@ function App() {
                                     elevation={1}
                                     sx={{
                                         p: 2,
-                                        backgroundColor: snapshot.isDraggingOver 
+                                        backgroundColor: snapshot.isDraggingOver
                                             ? '#f5f5f5'
                                             : getColumnColor(status),
                                         minHeight: 200,
@@ -193,12 +211,13 @@ function App() {
                                     <Typography variant="h6" sx={{ mb: 2 }}>
                                         {getColumnTitle(status)}
                                     </Typography>
-                                    
+
                                     <TaskList
                                         tasks={tasks[status]}
                                         labels={labels}
                                         onEdit={handleEditTask}
                                         onUpdateStatus={updateTaskStatus}
+                                        onDelete={deleteTask}
                                     />
                                     {provided.placeholder}
                                 </Paper>
@@ -219,6 +238,7 @@ function App() {
                 updateTask={updateTask}
                 labels={labels}
                 onAddLabel={addLabel}
+                onDeleteLabel={deleteLabel}
             />
         </Container>
     );

@@ -2,7 +2,7 @@ import React from 'react';
 import TaskItem from './TaskItem';
 import { Box } from '@mui/material';
 
-function TaskList({ tasks, labels, onEdit, onUpdateStatus }) {
+function TaskList({ tasks, labels, onEdit, onUpdateStatus, onDelete }) {
 	if (!Array.isArray(tasks)) {
 		console.warn('Tasks is not an array:', tasks);
 		return null;
@@ -23,6 +23,7 @@ function TaskList({ tasks, labels, onEdit, onUpdateStatus }) {
 					index={index}
 					onEdit={onEdit}
 					onUpdateStatus={onUpdateStatus}
+					onDelete={onDelete}
 				/>
 			))}
 		</Box>
